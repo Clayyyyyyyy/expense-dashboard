@@ -644,9 +644,18 @@
             var isSel = i === pieSelected;
             var top = pieBox.querySelector('.pie-top[data-i="' + i + '"]');
             if (top) {
-              top.style.transform = "";
+              if (isSel) {
+                /* scale 1.07 around the pie center (cx=176, cy=95): the slice
+                   grows outward and overlaps its neighbours, so no white gap
+                   ever shows; bring it to front so the overlap paints cleanly */
+                top.setAttribute("transform", "translate(176 95) scale(1.07) translate(-176 -95)");
+                top.style.filter = "brightness(1.12)";
+                top.parentNode.appendChild(top);
+              } else {
+                top.removeAttribute("transform");
+                top.style.filter = "";
+              }
               top.style.opacity = "1";
-              top.style.filter = isSel ? "brightness(1.12)" : "";
             }
           });
           var center = document.getElementById("pieCenter");

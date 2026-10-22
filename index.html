@@ -600,9 +600,9 @@
           { name: "超市", pct: 6.1,  amt: 413.16,  color: "#9e8ca3", dark: "#7e6f83" },
           { name: "其他", pct: 11.7, amt: 792.76,  color: "#d9d4cb", dark: "#b0aa9f" }
         ];
-        var cx = 176, cy = 100, r = 72, depth = 20;
+        var cx = 176, cy = 100, rO = 82, rI = 44, depth = 16;
         var GAP = 1.5;
-        function pt(a, dy) {
+        function pt(r, a, dy) {
           var rad = a * Math.PI / 180;
           return [cx + r * Math.cos(rad), cy + r * Math.sin(rad) + (dy || 0)];
         }
@@ -613,26 +613,28 @@
           slices.push({ c: c, r0: start, r1: start + span, a0: start + GAP, a1: start + span - GAP });
           start += span;
         });
-        /* 3D pie: side walls first (all), then top slices (all) so tops always
-           cover the back walls; each slice's side+top share data-i and move together */
+        /* 第一版 3D 圆环：空心圆环 + 外圈侧壁厚度；侧壁先画、顶面后画 */
         var sideSvg = "", topSvg = "";
         slices.forEach(function (sl, i) {
-          var p0 = pt(sl.a0), p1 = pt(sl.a1);
-          var p0b = pt(sl.a0, depth), p1b = pt(sl.a1, depth);
+          var o0 = pt(rO, sl.a0), o1 = pt(rO, sl.a1);
+          var o0b = pt(rO, sl.a0, depth), o1b = pt(rO, sl.a1, depth);
           var large = (sl.a1 - sl.a0) > 180 ? 1 : 0;
-          var sideD = "M" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
-            " A" + r + " " + r + " 0 " + large + " 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) +
-            " L" + p1b[0].toFixed(1) + " " + p1b[1].toFixed(1) +
-            " A" + r + " " + r + " 0 " + large + " 0 " + p0b[0].toFixed(1) + " " + p0b[1].toFixed(1) + " Z";
+          var sideD = "M" + o0[0].toFixed(1) + " " + o0[1].toFixed(1) +
+            " A" + rO + " " + rO + " 0 " + large + " 1 " + o1[0].toFixed(1) + " " + o1[1].toFixed(1) +
+            " L" + o1b[0].toFixed(1) + " " + o1b[1].toFixed(1) +
+            " A" + rO + " " + rO + " 0 " + large + " 0 " + o0b[0].toFixed(1) + " " + o0b[1].toFixed(1) + " Z";
           sideSvg += '<path class="pie-side" data-i="' + i + '" d="' + sideD + '" fill="' + sl.c.dark + '"/>';
-          var topD = "M" + cx + " " + cy + " L" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
-            " A" + r + " " + r + " 0 " + large + " 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) + " Z";
+          var i1 = pt(rI, sl.a1), i0 = pt(rI, sl.a0);
+          var topD = "M" + o0[0].toFixed(1) + " " + o0[1].toFixed(1) +
+            " A" + rO + " " + rO + " 0 " + large + " 1 " + o1[0].toFixed(1) + " " + o1[1].toFixed(1) +
+            " L" + i1[0].toFixed(1) + " " + i1[1].toFixed(1) +
+            " A" + rI + " " + rI + " 0 " + large + " 0 " + i0[0].toFixed(1) + " " + i0[1].toFixed(1) + " Z";
           topSvg += '<path class="pie-top" data-i="' + i + '" d="' + topD + '" fill="' + sl.c.color +
-            '" stroke="' + sl.c.color + '" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>';
+            '" stroke="' + sl.c.color + '" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>';
         });
         var pieBox = document.getElementById("pieChart");
         pieBox.innerHTML =
-          '<svg viewBox="0 0 352 200" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
+          '<svg viewBox="0 0 352 210" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
           '<g id="pieSides">' + sideSvg + "</g>" +
           '<g id="pieTops">' + topSvg + "</g>" +
           "</svg>" +
@@ -649,9 +651,8 @@
             '<span class="am num">$' + fmt(c.amt) + '</span></div>';
         }).join("");
 
-        /* original interaction: shopping slightly out by default; tap a slice to
-           pop it out, brighten it, dim the rest to 0.4, and show a glass card
-           in the center; tap again or tap empty space to go back to default */
+        /* 第一版交互：购物默认轻微外移；点扇区外移变亮、其余降到 0.4、
+           中央磨玻璃卡显示类名/占比/金额；再点或点空白处取消 */
         var pieSelected = -1;
         function pieVec(i, dist) {
           var mid = (slices[i].r0 + slices[i].r1) / 2 * Math.PI / 180;

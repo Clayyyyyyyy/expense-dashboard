@@ -60,7 +60,6 @@
       body {
         margin: 0;
         background: var(--bg-grad);
-      }
         color: var(--ink);
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
         font-size: 15px;
@@ -247,6 +246,21 @@
       .sw-line { width: 16px; height: 3px; border-radius: 2px; background: var(--blue); }
       .chart-box { margin-top: 6px; }
       .chart-box svg { display: block; width: 100%; height: auto; }
+      #dailyChart svg { overflow: visible; }
+      .daily-bar {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform .6s cubic-bezier(.22,.8,.3,1), opacity .6s ease, filter .6s ease;
+      }
+      .daily-info {
+        display: none; margin-top: 10px; align-items: baseline; justify-content: center; gap: 10px;
+        background: var(--glass-soft);
+        border: 1px solid var(--glass-border); border-radius: 99px;
+        padding: 7px 16px; font-size: 14px;
+      }
+      .daily-info.show { display: flex; }
+      .daily-info .d-date { font-weight: 700; }
+      .daily-info .d-amt { font-weight: 700; color: var(--ink-2); }
       .pos { color: var(--green); }
       .neg { color: var(--red); }
 
@@ -319,6 +333,7 @@
         .tab { transition: none; }
         .pie-top { transition: none; }
         .pie-center { transition: none; }
+        .daily-bar { transition: none; }
       }
     </style>
   </head>
@@ -446,6 +461,7 @@
         <section class="card" aria-label="最近 30 天每日支出">
           <h2>最近 30 天支出 <span class="sub">09-23 至 10-20</span></h2>
           <div class="chart-box" id="dailyChart"></div>
+          <div class="daily-info" id="dailyInfo" aria-live="polite"><span class="d-date" id="dailyDate"></span><span class="d-amt num" id="dailyAmt"></span></div>
           <div class="daily-note">09-25 单日最高 $3,887.88；09-23 为净退款日（−$183.96），柱子向下以绿色显示。</div>
         </section>
 
@@ -788,17 +804,21 @@
         var cGreen = dark ? "#a3bd9c" : "#7d9b76";
         var cTxt = dark ? "#7e766b" : "#a39c92";
         var s = "";
+        var dailyCx = [];
         DAILY.forEach(function (day, i) {
           var v = day[1];
           var cx = left + slot * i + slot / 2;
+          dailyCx.push(cx);
           var x = cx - bw / 2;
           if (v >= 0) {
-            s += '<rect x="' + x + '" y="' + Y(v) + '" width="' + bw + '" height="' + Math.max(1.2, zeroY - Y(v)) +
+            s += '<rect class="daily-bar" data-i="' + i + '" x="' + x + '" y="' + Y(v) + '" width="' + bw + '" height="' + Math.max(1.2, zeroY - Y(v)) +
                  '" rx="1.5" fill="' + cRed + '"/>';
           } else {
-            s += '<rect x="' + x + '" y="' + zeroY + '" width="' + bw + '" height="' + Math.max(1.2, Y(v) - zeroY) +
+            s += '<rect class="daily-bar" data-i="' + i + '" x="' + x + '" y="' + zeroY + '" width="' + bw + '" height="' + Math.max(1.2, Y(v) - zeroY) +
                  '" rx="1.5" fill="' + cGreen + '"/>';
           }
+          /* 透明点击区：柱子本身只有约 7px 宽，手指难点的，用整格宽度接点击 */
+          s += '<rect data-i="' + i + '" x="' + (left + slot * i) + '" y="' + top + '" width="' + slot + '" height="' + plotH + '" fill="transparent"/>';
         });
         s += '<line x1="' + left + '" x2="' + (W - right) + '" y1="' + zeroY + '" y2="' + zeroY +
              '" stroke="' + cTxt + '" stroke-width="1" opacity=".55"/>';
@@ -811,8 +831,50 @@
           var anchor = i === 0 ? "start" : (i === n - 1 ? "end" : "middle");
           s += '<text x="' + cx + '" y="' + (H - 5) + '" font-size="9" text-anchor="' + anchor + '" fill="' + cTxt + '">' + DAILY[i][0] + '</text>';
         });
-        document.getElementById("dailyChart").innerHTML =
-          '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="最近 30 天每日支出柱状图">' + s + "</svg>";
+        var dailyBox = document.getElementById("dailyChart");
+        dailyBox.innerHTML =
+          '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="最近 30 天每日支出柱状图，点按柱子查看日期和金额">' + s + "</svg>";
+        /* 点柱子放大高亮、其余变淡，下方显示日期和金额；再点一次或点空白处取消 */
+        var dailySelected = -1;
+        function renderDaily() {
+          var bars = dailyBox.querySelectorAll(".daily-bar");
+          bars.forEach(function (bar, i) {
+            var isSel = i === dailySelected;
+            var dim = dailySelected !== -1 && !isSel;
+            if (isSel) {
+              bar.style.transformOrigin = dailyCx[i].toFixed(1) + "px " + zeroY.toFixed(1) + "px";
+              bar.style.transform = "scale(1.4, 1.08)";
+              bar.style.opacity = "1";
+              bar.style.filter = "brightness(1.08)";
+            } else {
+              bar.style.transform = "";
+              bar.style.opacity = dim ? "0.4" : "1";
+              bar.style.filter = "";
+            }
+          });
+          var info = document.getElementById("dailyInfo");
+          if (dailySelected >= 0) {
+            var d = DAILY[dailySelected], v = d[1];
+            document.getElementById("dailyDate").textContent = d[0];
+            document.getElementById("dailyAmt").textContent =
+              (v < 0 ? "−$" + fmt(Math.abs(v)) + " · 净退款" : "$" + fmt(v));
+            info.classList.add("show");
+          } else {
+            info.classList.remove("show");
+          }
+        }
+        dailyBox.addEventListener("click", function (e) {
+          var el = e.target && e.target.closest ? e.target.closest("[data-i]") : null;
+          var idx = el ? el.getAttribute("data-i") : null;
+          if (idx === null) {
+            dailySelected = -1;
+          } else {
+            idx = parseInt(idx, 10);
+            dailySelected = dailySelected === idx ? -1 : idx;
+          }
+          renderDaily();
+        });
+        renderDaily();
       })();
 
       /* ---------- tabs ---------- */

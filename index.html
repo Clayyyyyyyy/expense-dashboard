@@ -217,6 +217,16 @@
         text-align: center; pointer-events: none;
         color: var(--ink);
         opacity: 0; transition: opacity .25s ease;
+        background: var(--glass);
+        -webkit-backdrop-filter: blur(12px) saturate(1.5);
+        backdrop-filter: blur(12px) saturate(1.5);
+        border: 1px solid var(--glass-border);
+        border-radius: 14px;
+        padding: 10px 16px;
+        box-shadow: var(--shadow);
+      }
+      .pie-side {
+        transition: transform .35s ease, opacity .35s ease;
       }
       .pie-center.show { opacity: 1; }
       .pie-center .pc-name { display: block; font-size: 17px; font-weight: 800; line-height: 1.3; }
@@ -583,18 +593,18 @@
       /* 2D pie chart — overview (hand-built SVG, no chart library) */
       (function buildPie() {
         var PIE = [
-          { name: "购物", pct: 47.4, amt: 3204.48, color: "#c0857d" },
-          { name: "医疗", pct: 14.1, amt: 955.16,  color: "#5b7fa6" },
-          { name: "转账", pct: 10.5, amt: 710.00,  color: "#7d9b76" },
-          { name: "餐饮", pct: 10.1, amt: 685.51,  color: "#d4b896" },
-          { name: "超市", pct: 6.1,  amt: 413.16,  color: "#9e8ca3" },
-          { name: "其他", pct: 11.7, amt: 792.76, color: "#d9d4cb" }
+          { name: "购物", pct: 47.4, amt: 3204.48, color: "#c0857d", dark: "#a06a62" },
+          { name: "医疗", pct: 14.1, amt: 955.16,  color: "#5b7fa6", dark: "#466482" },
+          { name: "转账", pct: 10.5, amt: 710.00,  color: "#7d9b76", dark: "#637d5e" },
+          { name: "餐饮", pct: 10.1, amt: 685.51,  color: "#d4b896", dark: "#b3946f" },
+          { name: "超市", pct: 6.1,  amt: 413.16,  color: "#9e8ca3", dark: "#7e6f83" },
+          { name: "其他", pct: 11.7, amt: 792.76,  color: "#d9d4cb", dark: "#b0aa9f" }
         ];
-        var cx = 176, cy = 95, r = 80;
-        var GAP = 0; /* no gap: slices join into one complete circle */
-        function pt(a) {
+        var cx = 176, cy = 100, r = 72, depth = 20;
+        var GAP = 1.5;
+        function pt(a, dy) {
           var rad = a * Math.PI / 180;
-          return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+          return [cx + r * Math.cos(rad), cy + r * Math.sin(rad) + (dy || 0)];
         }
         var start = 270, slices = [], totalPct = 0;
         PIE.forEach(function (c) { totalPct += c.pct; });
@@ -603,21 +613,29 @@
           slices.push({ c: c, r0: start, r1: start + span, a0: start + GAP, a1: start + span - GAP });
           start += span;
         });
-        /* flat 2D slices — angle-trimmed (GAP) and stroked in their own color
-           with round joins/caps, so seams and outer corners are rounded;
-           together they pave the whole circle with no hole */
-        var s = "";
+        /* 3D pie: side walls first (all), then top slices (all) so tops always
+           cover the back walls; each slice's side+top share data-i and move together */
+        var sideSvg = "", topSvg = "";
         slices.forEach(function (sl, i) {
           var p0 = pt(sl.a0), p1 = pt(sl.a1);
+          var p0b = pt(sl.a0, depth), p1b = pt(sl.a1, depth);
           var large = (sl.a1 - sl.a0) > 180 ? 1 : 0;
-          var d = "M" + cx + " " + cy + " L" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
+          var sideD = "M" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
+            " A" + r + " " + r + " 0 " + large + " 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) +
+            " L" + p1b[0].toFixed(1) + " " + p1b[1].toFixed(1) +
+            " A" + r + " " + r + " 0 " + large + " 0 " + p0b[0].toFixed(1) + " " + p0b[1].toFixed(1) + " Z";
+          sideSvg += '<path class="pie-side" data-i="' + i + '" d="' + sideD + '" fill="' + sl.c.dark + '"/>';
+          var topD = "M" + cx + " " + cy + " L" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
             " A" + r + " " + r + " 0 " + large + " 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) + " Z";
-          s += '<path class="pie-top" data-i="' + i + '" d="' + d + '" fill="' + sl.c.color + '"/>';
+          topSvg += '<path class="pie-top" data-i="' + i + '" d="' + topD + '" fill="' + sl.c.color +
+            '" stroke="' + sl.c.color + '" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>';
         });
         var pieBox = document.getElementById("pieChart");
         pieBox.innerHTML =
-          '<svg viewBox="0 0 352 190" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
-          s + "</svg>" +
+          '<svg viewBox="0 0 352 200" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
+          '<g id="pieSides">' + sideSvg + "</g>" +
+          '<g id="pieTops">' + topSvg + "</g>" +
+          "</svg>" +
           '<div class="pie-center" id="pieCenter" aria-live="polite">' +
             '<span class="pc-name" id="pcName"></span>' +
             '<span class="pc-pct" id="pcPct"></span>' +
@@ -631,9 +649,9 @@
             '<span class="am num">$' + fmt(c.amt) + '</span></div>';
         }).join("");
 
-        /* ---- tap / click a slice: pop it out slightly, dim the rest, and
-           show its name / share / amount in the pie's center; tap it again
-           or tap empty space to clear back to a blank center ---- */
+        /* original interaction: shopping slightly out by default; tap a slice to
+           pop it out, brighten it, dim the rest to 0.4, and show a glass card
+           in the center; tap again or tap empty space to go back to default */
         var pieSelected = -1;
         function pieVec(i, dist) {
           var mid = (slices[i].r0 + slices[i].r1) / 2 * Math.PI / 180;
@@ -642,20 +660,24 @@
         function renderPie() {
           slices.forEach(function (sl, i) {
             var isSel = i === pieSelected;
+            var isDefault = pieSelected === -1 && i === 0;
+            var dist = isSel ? 12 : (isDefault ? 6 : 0);
+            var v = pieVec(i, dist);
+            var tf = "translate(" + v[0].toFixed(1) + "px, " + v[1].toFixed(1) + "px)";
+            var dim = pieSelected !== -1 && !isSel;
+            var side = pieBox.querySelector('.pie-side[data-i="' + i + '"]');
             var top = pieBox.querySelector('.pie-top[data-i="' + i + '"]');
+            if (side) { side.style.transform = tf; side.style.opacity = dim ? "0.4" : "1"; }
             if (top) {
-              if (isSel) {
-                /* scale 1.07 around the pie center (cx=176, cy=95): the slice
-                   grows outward and overlaps its neighbours, so no white gap
-                   ever shows; bring it to front so the overlap paints cleanly */
-                top.setAttribute("transform", "translate(176 95) scale(1.07) translate(-176 -95)");
-                top.style.filter = "brightness(1.12)";
-                top.parentNode.appendChild(top);
-              } else {
-                top.removeAttribute("transform");
-                top.style.filter = "";
-              }
-              top.style.opacity = "1";
+              top.style.transform = tf;
+              top.style.opacity = dim ? "0.4" : "1";
+              top.style.filter = isSel ? "brightness(1.08)" : "";
+            }
+            if (isSel) {
+              var sidesG = document.getElementById("pieSides");
+              var topsG = document.getElementById("pieTops");
+              if (side && sidesG) sidesG.appendChild(side);
+              if (top && topsG) topsG.appendChild(top);
             }
           });
           var center = document.getElementById("pieCenter");

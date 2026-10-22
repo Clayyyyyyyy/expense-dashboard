@@ -187,12 +187,12 @@
       .cat-total .num { font-size: 16px; }
 
       /* ---------- pie legend ---------- */
-      .pie-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 20px; margin-top: 12px; }
-      .pie-legend .li { display: flex; align-items: center; gap: 7px; font-size: 13px; }
+      .pie-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 12px; margin-top: 12px; }
+      .pie-legend .li { display: flex; align-items: center; gap: 6px; font-size: 12px; min-width: 0; }
       .pie-legend .dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-      .pie-legend .nm { font-weight: 600; }
-      .pie-legend .pc { margin-left: auto; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
-      .pie-legend .am { font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+      .pie-legend .nm { font-weight: 600; white-space: nowrap; flex: none; }
+      .pie-legend .pc { margin-left: auto; font-weight: 700; color: var(--ink-2); white-space: nowrap; flex: none; }
+      .pie-legend .am { font-weight: 600; color: var(--ink-3); white-space: nowrap; flex: none; }
       .pie-legend .li.zero { opacity: .55; }
 
       /* ---------- pie interaction ---------- */

@@ -57,18 +57,18 @@
       }
       * { box-sizing: border-box; }
       html { -webkit-text-size-adjust: 100%; }
+      html {
+        background: var(--bg-grad);
+        background-attachment: fixed;
+      }
       body {
         margin: 0;
-        background: var(--bg);
+        background: transparent;
         color: var(--ink);
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
         font-size: 15px;
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
-      }
-      body::before {
-        content: ""; position: fixed; inset: 0; z-index: -1;
-        background: var(--bg-grad);
       }
       .wrap {
         max-width: 480px;
@@ -611,8 +611,7 @@
           var large = (sl.a1 - sl.a0) > 180 ? 1 : 0;
           var d = "M" + cx + " " + cy + " L" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
             " A" + r + " " + r + " 0 " + large + " 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1) + " Z";
-          s += '<path class="pie-top" data-i="' + i + '" d="' + d + '" fill="' + sl.c.color +
-               '" stroke="' + sl.c.color + '" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>';
+          s += '<path class="pie-top" data-i="' + i + '" d="' + d + '" fill="' + sl.c.color + '"/>';
         });
         var pieBox = document.getElementById("pieChart");
         pieBox.innerHTML =

@@ -593,7 +593,7 @@
           { name: "超市", pct: 6.1,  amt: 413.16,  color: "#9e8ca3", dark: "#7e6f83" },
           { name: "其他", pct: 11.7, amt: 792.76,  color: "#d9d4cb", dark: "#b0aa9f" }
         ];
-        var cx = 176, cy = 176, rO = 160;
+        var cx = 176, cy = 100, rO = 82;
         var GAP = 0;
         function pt(r, a) {
           var rad = a * Math.PI / 180;
@@ -606,7 +606,7 @@
           slices.push({ c: c, r0: start, r1: start + span, a0: start + GAP, a1: start + span - GAP });
           start += span;
         });
-        /* 实心正圆饼：只画顶面扇区，不画 3D 侧壁 */
+        /* 实心正圆饼：只画顶面扇区，不画 3D 侧壁；SVG 等比缩放，画布宽高比不会把圆拉成椭圆 */
         var topSvg = "";
         slices.forEach(function (sl, i) {
           var o0 = pt(rO, sl.a0), o1 = pt(rO, sl.a1);
@@ -618,7 +618,7 @@
         });
         var pieBox = document.getElementById("pieChart");
         pieBox.innerHTML =
-          '<svg viewBox="0 0 352 352" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
+          '<svg viewBox="0 0 352 200" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
           '<g id="pieTops">' + topSvg + "</g>" +
           "</svg>" +
           '<div class="pie-center" id="pieCenter" aria-live="polite">' +
@@ -654,7 +654,7 @@
               if (top) void top.getBoundingClientRect();
               /* 绕饼心缩放 1.07 倍：用 CSS transform + transform-origin，
                  0.6s 缓动才能生效（SVG attribute 改动不走过渡，会跳变） */
-              if (top) { top.style.transformOrigin = "176px 176px"; top.style.transform = "scale(1.07)"; top.style.opacity = "1"; top.style.filter = "brightness(1.08)"; }
+              if (top) { top.style.transformOrigin = "176px 100px"; top.style.transform = "scale(1.07)"; top.style.opacity = "1"; top.style.filter = "brightness(1.08)"; }
             } else {
               if (top) { top.style.transform = ""; top.style.opacity = dim ? "0.4" : "1"; top.style.filter = ""; }
             }

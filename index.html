@@ -56,16 +56,10 @@
         }
       }
       * { box-sizing: border-box; }
-      html { -webkit-text-size-adjust: 100%; margin: 0; background: var(--bg-grad); }
+      html { -webkit-text-size-adjust: 100%; margin: 0; background: transparent; }
       body {
         margin: 0;
-        background: var(--bg-grad);
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
-      }
-      body::before {
-        content: ""; position: fixed; inset: 0; z-index: -1;
-        background: var(--bg-grad);
+        background: transparent;
       }
         color: var(--ink);
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
@@ -73,10 +67,15 @@
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
       }
+      .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
+        z-index: -1; pointer-events: none;
+        background: var(--bg-grad);
+      }
       .wrap {
         max-width: 480px;
         margin: 0 auto;
-        padding: 20px 16px 32px;
+        padding: calc(20px + env(safe-area-inset-top)) 16px 32px;
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -207,7 +206,7 @@
       .pie-top {
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
-        transition: transform .35s ease, opacity .35s ease, filter .35s ease;
+        transition: transform .6s cubic-bezier(.22,.8,.3,1), opacity .6s ease, filter .6s ease;
       }
       /* selected-slice detail: three centered lines in the pie's heart.
          Default (nothing selected) the center is completely blank — the
@@ -228,7 +227,7 @@
         box-shadow: var(--shadow);
       }
       .pie-side {
-        transition: transform .35s ease, opacity .35s ease;
+        transition: transform .6s cubic-bezier(.22,.8,.3,1), opacity .6s ease;
       }
       .pie-center.show { opacity: 1; }
       .pie-center .pc-name { display: block; font-size: 17px; font-weight: 800; line-height: 1.3; }
@@ -332,6 +331,7 @@
     </style>
   </head>
   <body>
+    <div class="page-bg" aria-hidden="true"></div>
     <main class="wrap">
 
       <div class="page-head">
@@ -660,23 +660,24 @@
         function renderPie() {
           slices.forEach(function (sl, i) {
             var isSel = i === pieSelected;
-            var dist = isSel ? 12 : 0;
-            var v = pieVec(i, dist);
-            var tf = "translate(" + v[0].toFixed(1) + "px, " + v[1].toFixed(1) + "px)";
             var dim = pieSelected !== -1 && !isSel;
             var side = pieBox.querySelector('.pie-side[data-i="' + i + '"]');
             var top = pieBox.querySelector('.pie-top[data-i="' + i + '"]');
-            if (side) { side.style.transform = tf; side.style.opacity = dim ? "0.4" : "1"; }
-            if (top) {
-              top.style.transform = tf;
-              top.style.opacity = dim ? "0.4" : "1";
-              top.style.filter = isSel ? "brightness(1.08)" : "";
-            }
             if (isSel) {
+              /* 先把选中扇区置顶（无动画），强制回流后再设缩放，
+                 这样 0.6s 缓动才能从原尺寸平滑放大，不会一下子跳变 */
               var sidesG = document.getElementById("pieSides");
               var topsG = document.getElementById("pieTops");
               if (side && sidesG) sidesG.appendChild(side);
               if (top && topsG) topsG.appendChild(top);
+              if (top) void top.getBoundingClientRect();
+              /* 绕饼心缩放 1.07 倍：用 CSS transform + transform-origin，
+                 0.6s 缓动才能生效（SVG attribute 改动不走过渡，会跳变） */
+              if (side) { side.style.transformOrigin = "176px 100px"; side.style.transform = "scale(1.07)"; side.style.opacity = "1"; }
+              if (top) { top.style.transformOrigin = "176px 100px"; top.style.transform = "scale(1.07)"; top.style.opacity = "1"; top.style.filter = "brightness(1.08)"; }
+            } else {
+              if (side) { side.style.transform = ""; side.style.opacity = dim ? "0.4" : "1"; }
+              if (top) { top.style.transform = ""; top.style.opacity = dim ? "0.4" : "1"; top.style.filter = ""; }
             }
           });
           var center = document.getElementById("pieCenter");

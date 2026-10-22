@@ -3,6 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="记账看板" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4efe7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262219" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
     <title>记账看板</title>
@@ -59,6 +65,7 @@
       html { -webkit-text-size-adjust: 100%; margin: 0; background: var(--bg-grad); }
       body {
         margin: 0;
+        min-height: 100dvh;
         background: var(--bg-grad);
         color: var(--ink);
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
@@ -69,7 +76,7 @@
       .wrap {
         max-width: 480px;
         margin: 0 auto;
-        padding: calc(20px + env(safe-area-inset-top)) 16px 32px;
+        padding: calc(20px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));
         display: flex;
         flex-direction: column;
         gap: 14px;

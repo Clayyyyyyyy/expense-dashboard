@@ -378,7 +378,7 @@
         <!-- 本月结余 -->
         <section class="hero" aria-label="本月结余总览">
           <div class="label">本月结余</div>
-          <div class="big num"><span class="cur">$</span>53,878.57</div>
+          <div class="big num"><span class="cur">$</span>54,088.42</div>
           <div class="io">
             <div class="io-row">
               <span class="tag">收入</span>
@@ -387,8 +387,8 @@
             </div>
             <div class="io-row">
               <span class="tag">支出</span>
-              <div class="track"><i class="fill-out" data-w="11.1"></i></div>
-              <span class="amt num">$6,761.07<small>上月 $10,288.40</small></span>
+              <div class="track"><i class="fill-out" data-w="10.8"></i></div>
+              <span class="amt num">$6,551.22<small>上月 $10,288.40</small></span>
             </div>
           </div>
         </section>
@@ -397,12 +397,12 @@
         <section class="grid" aria-label="核心指标">
           <div class="stat">
             <div class="k">支出环比</div>
-            <div class="v num">−34.3%</div>
-            <div class="d">比上月少花 <span class="down num">$3,527.33</span></div>
+            <div class="v num">−36.3%</div>
+            <div class="d">比上月少花 <span class="down num">$3,737.18</span></div>
           </div>
           <div class="stat">
             <div class="k">本月日均支出</div>
-            <div class="v num">$307.32</div>
+            <div class="v num">$297.78</div>
             <div class="d">按本月已过天数计</div>
           </div>
           <div class="stat">
@@ -412,24 +412,24 @@
           </div>
           <div class="stat">
             <div class="k">本月退款</div>
-            <div class="v num">$709.14</div>
+            <div class="v num">$974.03</div>
             <div class="d">已计入支出冲减</div>
           </div>
           <div class="stat">
             <div class="k">年累计支出</div>
-            <div class="v num">$54,740.79</div>
+            <div class="v num">$54,530.94</div>
             <div class="d">过去 12 个月合计</div>
           </div>
           <div class="stat">
             <div class="k">12 个月储蓄率</div>
-            <div class="v num">56.2%</div>
-            <div class="d">累计结余 <span class="num">$70,158.65</span></div>
+            <div class="v num">56.3%</div>
+            <div class="d">累计结余 <span class="num">$70,368.50</span></div>
           </div>
         </section>
 
         <!-- 本月分类支出占比（2D 饼图） -->
         <section class="card" aria-label="本月分类支出占比">
-          <h2>本月分类支出占比 <span class="sub">合计 $6,761.07</span></h2>
+          <h2>本月分类支出占比 <span class="sub">合计 $6,551.22</span></h2>
           <div class="chart-box" id="pieChart"></div>
           <div class="pie-legend" id="pieLegend"></div>
         </section>
@@ -462,7 +462,7 @@
         <section class="card" aria-label="本月支出分类明细">
           <h2>支出分类 <span class="sub">本月</span></h2>
           <div id="cats"></div>
-          <div class="cat-total"><span>合计</span><span class="num">$6,761.07</span></div>
+          <div class="cat-total"><span>合计</span><span class="num">$6,551.22</span></div>
         </section>
 
         <!-- Top 10 单笔 -->
@@ -479,10 +479,10 @@
 
         <!-- 最近 30 天 -->
         <section class="card" aria-label="最近 30 天每日支出">
-          <h2>最近 30 天支出 <span class="sub">09-23 至 10-20</span></h2>
+          <h2>最近 30 天支出 <span class="sub">09-24 至 10-21</span></h2>
           <div class="chart-box" id="dailyChart"></div>
           <div class="daily-info" id="dailyInfo" aria-live="polite"><span class="d-date" id="dailyDate"></span><span class="d-amt num" id="dailyAmt"></span></div>
-          <div class="daily-note">09-25 单日最高 $3,887.88；09-23 为净退款日（−$183.96），柱子向下以绿色显示。</div>
+          <div class="daily-note">09-25 单日最高 $3,887.88；10-20 为净退款日（−$262.58），柱子向下以绿色显示。</div>
         </section>
 
         <!-- 最近交易 -->
@@ -514,8 +514,8 @@
           <div class="mrow total-top">
             <span>12 个月合计</span>
             <span class="num">$124,899.44</span>
-            <span class="num">$54,740.79</span>
-            <span class="bal num pos">+$70,158.65<span class="rate">储蓄率 56.2%</span></span>
+            <span class="num">$54,530.94</span>
+            <span class="bal num pos">+$70,368.50<span class="rate">储蓄率 56.3%</span></span>
           </div>
           <div id="months"></div>
         </section>
@@ -531,15 +531,15 @@
 
     <script>
       var CATS = [
-        { name: "购物", amt: 3204.48, pct: 47.4, color: "#5b7fa6" },
-        { name: "医疗", amt: 955.16, pct: 14.1, color: "#c0857d" },
-        { name: "转账", amt: 710.00, pct: 10.5, color: "#7d9b76" },
-        { name: "餐饮", amt: 685.51, pct: 10.1, color: "#bfa05a" },
-        { name: "超市", amt: 413.16, pct: 6.1, color: "#8fa998" },
-        { name: "水电网", amt: 302.75, pct: 4.5, color: "#7a8b99" },
+        { name: "购物", amt: 2939.59, pct: 44.9, color: "#5b7fa6" },
+        { name: "医疗", amt: 955.16, pct: 14.6, color: "#c0857d" },
+        { name: "转账", amt: 710.00, pct: 10.8, color: "#7d9b76" },
+        { name: "餐饮", amt: 685.51, pct: 10.5, color: "#bfa05a" },
+        { name: "超市", amt: 468.20, pct: 7.1, color: "#8fa998" },
+        { name: "水电网", amt: 302.75, pct: 4.6, color: "#7a8b99" },
         { name: "旅行", amt: 206.24, pct: 3.1, color: "#a08b74" },
-        { name: "其他", amt: 172.25, pct: 2.5, color: "#b0a696" },
-        { name: "交通", amt: 70.84, pct: 1.0, color: "#6f9494" },
+        { name: "其他", amt: 172.25, pct: 2.6, color: "#b0a696" },
+        { name: "交通", amt: 70.84, pct: 1.1, color: "#6f9494" },
         { name: "娱乐", amt: 40.68, pct: 0.6, color: "#cfa3a0" },
         { name: "房租", amt: 0.00, pct: 0.0, color: "#c9c2b4" },
         { name: "订阅", amt: 0.00, pct: 0.0, color: "#c9c2b4" }
@@ -555,7 +555,7 @@
         { m: "7月", inc: 7946.64, exp: 3676.24, bal: 4270.40 },
         { m: "8月", inc: 8701.55, exp: 2285.10, bal: 6416.45 },
         { m: "9月", inc: 8362.80, exp: 10288.40, bal: -1925.60 },
-        { m: "10月", inc: 60639.64, exp: 6761.07, bal: 53878.57, cur: true }
+        { m: "10月", inc: 60639.64, exp: 6551.22, bal: 54088.42, cur: true }
       ];
 
       var TOP10 = [
@@ -576,11 +576,10 @@
         { name: "Gdp=Ai Family", amt: 849.20, cnt: 3 },
         { name: "Pop Mart", amt: 746.64, cnt: 3 },
         { name: "Zelle To Teresa", amt: 675.00, cnt: 1 },
-        { name: "Amazon", amt: 380.65, cnt: 17 }
+        { name: "Wayfair", amt: 292.26, cnt: 1 }
       ];
 
       var DAILY = [
-        ["09-23", -183.96],
         ["09-24", 513.79],
         ["09-25", 3887.88],
         ["09-26", 8.11],
@@ -607,7 +606,8 @@
         ["10-17", 203.86],
         ["10-18", 113.32],
         ["10-19", 745.72],
-        ["10-20", 2.31]
+        ["10-20", -262.58],
+        ["10-21", 55.04]
       ];
 
       var TXS = [
@@ -644,12 +644,12 @@
       /* 2D pie chart — overview (hand-built SVG, no chart library) */
       (function buildPie() {
         var PIE = [
-          { name: "购物", pct: 47.4, amt: 3204.48, color: "#c0857d", dark: "#a06a62" },
-          { name: "医疗", pct: 14.1, amt: 955.16, color: "#5b7fa6", dark: "#466482" },
-          { name: "转账", pct: 10.5, amt: 710.00, color: "#7d9b76", dark: "#637d5e" },
-          { name: "餐饮", pct: 10.1, amt: 685.51, color: "#d4b896", dark: "#b3946f" },
-          { name: "超市", pct: 6.1, amt: 413.16, color: "#9e8ca3", dark: "#7e6f83" },
-          { name: "其他", pct: 11.7, amt: 792.76, color: "#d9d4cb", dark: "#b0aa9f" }
+          { name: "购物", pct: 44.9, amt: 2939.59, color: "#c0857d", dark: "#a06a62" },
+          { name: "医疗", pct: 14.6, amt: 955.16, color: "#5b7fa6", dark: "#466482" },
+          { name: "转账", pct: 10.8, amt: 710.00, color: "#7d9b76", dark: "#637d5e" },
+          { name: "餐饮", pct: 10.5, amt: 685.51, color: "#d4b896", dark: "#b3946f" },
+          { name: "超市", pct: 7.1, amt: 468.20, color: "#9e8ca3", dark: "#7e6f83" },
+          { name: "其他", pct: 12.1, amt: 792.76, color: "#d9d4cb", dark: "#b0aa9f" }
       ];
         var cx = 176, cy = 100, rO = 82;
         var GAP = 0;
@@ -837,7 +837,7 @@
       (function buildDaily() {
         var W = 352, H = 122, top = 16, bottom = 20, left = 4, right = 4;
         var plotH = H - top - bottom, plotW = W - left - right;
-        var max = 3887.88, min = -183.96, range = max - min;
+        var max = 3887.88, min = -262.58, range = max - min;
         function Y(v) { return top + (max - v) / range * plotH; }
         var zeroY = Y(0);
         var n = DAILY.length, slot = plotW / n, bw = Math.floor(slot * 0.62);
@@ -865,7 +865,7 @@
         s += '<line x1="' + left + '" x2="' + (W - right) + '" y1="' + zeroY + '" y2="' + zeroY +
              '" stroke="' + cTxt + '" stroke-width="1" opacity=".55"/>';
         /* peak label (09-25) */
-        var peakX = left + slot * 2 + slot / 2;
+        var peakX = left + slot * 1 + slot / 2;
         s += '<text x="' + peakX + '" y="' + (Y(max) - 4) + '" font-size="9" font-weight="700" text-anchor="middle" fill="' + cRed + '">$3,888</text>';
         /* sparse date labels */
         [0, 8, 17, 27].forEach(function (i) {

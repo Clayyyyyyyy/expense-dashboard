@@ -57,13 +57,14 @@
       }
       * { box-sizing: border-box; }
       html { -webkit-text-size-adjust: 100%; }
-      html {
-        background: var(--bg-grad);
-        background-attachment: fixed;
-      }
       body {
         margin: 0;
         background: transparent;
+      }
+      body::before {
+        content: ""; position: fixed; inset: 0; z-index: -1;
+        background: var(--bg-grad);
+      }
         color: var(--ink);
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
         font-size: 15px;
@@ -590,7 +591,7 @@
           { name: "其他", pct: 11.7, amt: 792.76, color: "#d9d4cb" }
         ];
         var cx = 176, cy = 95, r = 80;
-        var GAP = 1.5; /* degrees trimmed from each side of a slice: soft seam between slices */
+        var GAP = 0; /* no gap: slices join into one complete circle */
         function pt(a) {
           var rad = a * Math.PI / 180;
           return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
@@ -641,14 +642,11 @@
         function renderPie() {
           slices.forEach(function (sl, i) {
             var isSel = i === pieSelected;
-            var v = pieVec(i, isSel ? 9 : 0);
-            var tf = "translate(" + v[0].toFixed(1) + "px, " + v[1].toFixed(1) + "px)";
-            var dim = pieSelected !== -1 && !isSel;
             var top = pieBox.querySelector('.pie-top[data-i="' + i + '"]');
             if (top) {
-              top.style.transform = tf;
-              top.style.opacity = dim ? "0.4" : "1";
-              top.style.filter = isSel ? "brightness(1.08)" : "";
+              top.style.transform = "";
+              top.style.opacity = "1";
+              top.style.filter = isSel ? "brightness(1.12)" : "";
             }
           });
           var center = document.getElementById("pieCenter");

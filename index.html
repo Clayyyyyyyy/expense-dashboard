@@ -115,7 +115,8 @@
       .tab.active { background: transparent; color: var(--on-blue); font-weight: 700; }
       .tab:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
       .swipe-viewport { overflow: hidden; width: 100%; touch-action: pan-y; transition: height .5s cubic-bezier(.22,1,.36,1); }
-      .swipe-track { display: flex; align-items: flex-start; transition: transform .5s cubic-bezier(.22,1,.36,1); will-change: transform; }
+      .swipe-viewport.dragging { transition: none; }
+      .swipe-track { display: flex; align-items: flex-start; gap: 14px; transition: transform .5s cubic-bezier(.22,1,.36,1); will-change: transform; }
       .swipe-track.dragging { transition: none; }
       .panel { display: flex; flex-direction: column; gap: 14px; flex: 0 0 100%; min-width: 0; }
       .panel.active { display: flex; }
@@ -916,8 +917,10 @@
         tabIndicator.style.left = btn.offsetLeft + "px";
         tabIndicator.style.width = btn.offsetWidth + "px";
       }
+      var SWIPE_GAP = 14;
+      function swipeStep() { return swipeViewport.clientWidth + SWIPE_GAP; }
       function updateIndicatorDrag() {
-        var w = swipeViewport.clientWidth;
+        var w = swipeStep();
         var base = tabs[currentTab];
         if (!w || !base) { return; }
         var dir = swDx < 0 ? 1 : -1;
@@ -935,7 +938,8 @@
       }
       function setSwipe(animate) {
         swipeTrack.classList.toggle("dragging", !animate);
-        swipeTrack.style.transform = "translateX(" + (-currentTab * swipeViewport.clientWidth) + "px)";
+        swipeViewport.classList.toggle("dragging", !animate);
+        swipeTrack.style.transform = "translateX(" + (-currentTab * swipeStep()) + "px)";
         swipeViewport.style.height = swipePanels[currentTab].offsetHeight + "px";
       }
       function goToTab(i, animate) {
@@ -979,13 +983,24 @@
         if ((currentTab === 0 && dx > 0) || (currentTab === swipePanels.length - 1 && dx < 0)) { swDx = dx * 0.3; }
         swMoved = Math.abs(swDx) > 10;
         swipeTrack.classList.add("dragging");
-        swipeTrack.style.transform = "translateX(" + (-currentTab * swipeViewport.clientWidth + swDx) + "px)";
+        swipeViewport.classList.add("dragging");
+        var step = swipeStep();
+        swipeTrack.style.transform = "translateX(" + (-currentTab * step + swDx) + "px)";
+        var dir = swDx < 0 ? 1 : -1;
+        var ni = currentTab + dir;
+        if (ni >= 0 && ni < swipePanels.length) {
+          var p = Math.min(1, Math.abs(swDx) / step);
+          var h0 = swipePanels[currentTab].offsetHeight;
+          var h1 = swipePanels[ni].offsetHeight;
+          swipeViewport.style.height = (h0 + (h1 - h0) * p) + "px";
+        }
         updateIndicatorDrag();
       }, { passive: false });
       function endSwipe() {
         if (!swDragging) { return; }
         swDragging = false;
         swipeTrack.classList.remove("dragging");
+        swipeViewport.classList.remove("dragging");
         var w = swipeViewport.clientWidth;
         var dt = Math.max(1, Date.now() - swStartT);
         var fast = Math.abs(swDx) > 50 && Math.abs(swDx) / dt > 0.5;
@@ -1002,6 +1017,7 @@
       swipeViewport.addEventListener("touchcancel", function () {
         swDragging = false;
         swipeTrack.classList.remove("dragging");
+        swipeViewport.classList.remove("dragging");
         goToTab(currentTab, true);
       });
       window.addEventListener("resize", function () { updateIndicator(false); setSwipe(false); });

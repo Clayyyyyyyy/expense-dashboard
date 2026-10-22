@@ -98,17 +98,24 @@
         padding: 4px;
         box-shadow: var(--shadow);
       }
+      .tab-indicator {
+        position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 16px) / 3);
+        background: var(--blue); border-radius: 99px; z-index: 0;
+        transition: left .5s cubic-bezier(.22,1,.36,1), width .5s cubic-bezier(.22,1,.36,1);
+      }
+      .tab-indicator.no-transition { transition: none; }
       .tab {
+        position: relative; z-index: 1;
         flex: 1; appearance: none; border: 0; cursor: pointer;
         background: transparent; color: var(--ink-2);
         font: inherit; font-size: 14px; font-weight: 600;
         padding: 9px 0; border-radius: 99px;
-        transition: background .2s ease, color .2s ease;
+        transition: color .5s ease;
       }
-      .tab.active { background: var(--blue); color: var(--on-blue); font-weight: 700; }
+      .tab.active { background: transparent; color: var(--on-blue); font-weight: 700; }
       .tab:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-      .swipe-viewport { overflow: hidden; width: 100%; touch-action: pan-y; transition: height .35s cubic-bezier(.22,.8,.3,1); }
-      .swipe-track { display: flex; align-items: flex-start; transition: transform .35s cubic-bezier(.22,.8,.3,1); will-change: transform; }
+      .swipe-viewport { overflow: hidden; width: 100%; touch-action: pan-y; transition: height .5s cubic-bezier(.22,1,.36,1); }
+      .swipe-track { display: flex; align-items: flex-start; transition: transform .5s cubic-bezier(.22,1,.36,1); will-change: transform; }
       .swipe-track.dragging { transition: none; }
       .panel { display: flex; flex-direction: column; gap: 14px; flex: 0 0 100%; min-width: 0; }
       .panel.active { display: flex; }
@@ -350,6 +357,7 @@
 
       <!-- Tab 导航 -->
       <nav class="tabs" role="tablist" aria-label="看板分页">
+        <span class="tab-indicator" id="tabIndicator" aria-hidden="true"></span>
         <button class="tab active" type="button" role="tab" aria-selected="true" data-tab="overview">总览</button>
         <button class="tab" type="button" role="tab" aria-selected="false" data-tab="spending">支出</button>
         <button class="tab" type="button" role="tab" aria-selected="false" data-tab="balance">结余</button>
@@ -899,6 +907,32 @@
       var swipeViewport = document.getElementById("swipeViewport");
       var swipeTrack = document.getElementById("swipeTrack");
       var currentTab = 0;
+      var tabIndicator = document.getElementById("tabIndicator");
+      function updateIndicator(animate) {
+        var btn = tabs[currentTab];
+        if (!btn) { return; }
+        tabIndicator.classList.toggle("no-transition", !animate);
+        if (animate) { void tabIndicator.offsetWidth; }
+        tabIndicator.style.left = btn.offsetLeft + "px";
+        tabIndicator.style.width = btn.offsetWidth + "px";
+      }
+      function updateIndicatorDrag() {
+        var w = swipeViewport.clientWidth;
+        var base = tabs[currentTab];
+        if (!w || !base) { return; }
+        var dir = swDx < 0 ? 1 : -1;
+        var ni = currentTab + dir;
+        tabIndicator.classList.add("no-transition");
+        if (ni < 0 || ni >= tabs.length) {
+          tabIndicator.style.left = base.offsetLeft + "px";
+          tabIndicator.style.width = base.offsetWidth + "px";
+          return;
+        }
+        var nb = tabs[ni];
+        var p = Math.min(1, Math.abs(swDx) / w);
+        tabIndicator.style.left = (base.offsetLeft + (nb.offsetLeft - base.offsetLeft) * p) + "px";
+        tabIndicator.style.width = (base.offsetWidth + (nb.offsetWidth - base.offsetWidth) * p) + "px";
+      }
       function setSwipe(animate) {
         swipeTrack.classList.toggle("dragging", !animate);
         swipeTrack.style.transform = "translateX(" + (-currentTab * swipeViewport.clientWidth) + "px)";
@@ -913,6 +947,7 @@
           b.setAttribute("aria-selected", bi === currentTab ? "true" : "false");
         });
         swipePanels.forEach(function (p, pi) { p.classList.toggle("active", pi === currentTab); });
+        updateIndicator(animate !== false);
         setSwipe(animate !== false);
         animateBars(swipePanels[currentTab]);
         if (changed) { window.scrollTo(0, 0); }
@@ -945,6 +980,7 @@
         swMoved = Math.abs(swDx) > 10;
         swipeTrack.classList.add("dragging");
         swipeTrack.style.transform = "translateX(" + (-currentTab * swipeViewport.clientWidth + swDx) + "px)";
+        updateIndicatorDrag();
       }, { passive: false });
       function endSwipe() {
         if (!swDragging) { return; }
@@ -968,8 +1004,9 @@
         swipeTrack.classList.remove("dragging");
         goToTab(currentTab, true);
       });
-      window.addEventListener("resize", function () { setSwipe(false); });
+      window.addEventListener("resize", function () { updateIndicator(false); setSwipe(false); });
       animateBars(swipePanels[0]);
+      updateIndicator(false);
       setSwipe(false);
     </script>
   </body>

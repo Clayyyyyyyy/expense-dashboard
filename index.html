@@ -56,10 +56,12 @@
         }
       }
       * { box-sizing: border-box; }
-      html { -webkit-text-size-adjust: 100%; }
+      html { -webkit-text-size-adjust: 100%; margin: 0; background: var(--bg-grad); }
       body {
         margin: 0;
-        background: transparent;
+        background: var(--bg-grad);
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
       }
       body::before {
         content: ""; position: fixed; inset: 0; z-index: -1;
@@ -600,8 +602,8 @@
           { name: "超市", pct: 6.1,  amt: 413.16,  color: "#9e8ca3", dark: "#7e6f83" },
           { name: "其他", pct: 11.7, amt: 792.76,  color: "#d9d4cb", dark: "#b0aa9f" }
         ];
-        var cx = 176, cy = 100, rO = 82, rI = 44, depth = 16;
-        var GAP = 1.5;
+        var cx = 176, cy = 100, rO = 82, depth = 16;
+        var GAP = 0;
         function pt(r, a, dy) {
           var rad = a * Math.PI / 180;
           return [cx + r * Math.cos(rad), cy + r * Math.sin(rad) + (dy || 0)];
@@ -624,17 +626,14 @@
             " L" + o1b[0].toFixed(1) + " " + o1b[1].toFixed(1) +
             " A" + rO + " " + rO + " 0 " + large + " 0 " + o0b[0].toFixed(1) + " " + o0b[1].toFixed(1) + " Z";
           sideSvg += '<path class="pie-side" data-i="' + i + '" d="' + sideD + '" fill="' + sl.c.dark + '"/>';
-          var i1 = pt(rI, sl.a1), i0 = pt(rI, sl.a0);
-          var topD = "M" + o0[0].toFixed(1) + " " + o0[1].toFixed(1) +
-            " A" + rO + " " + rO + " 0 " + large + " 1 " + o1[0].toFixed(1) + " " + o1[1].toFixed(1) +
-            " L" + i1[0].toFixed(1) + " " + i1[1].toFixed(1) +
-            " A" + rI + " " + rI + " 0 " + large + " 0 " + i0[0].toFixed(1) + " " + i0[1].toFixed(1) + " Z";
+          var topD = "M" + cx + " " + cy + " L" + o0[0].toFixed(1) + " " + o0[1].toFixed(1) +
+            " A" + rO + " " + rO + " 0 " + large + " 1 " + o1[0].toFixed(1) + " " + o1[1].toFixed(1) + " Z";
           topSvg += '<path class="pie-top" data-i="' + i + '" d="' + topD + '" fill="' + sl.c.color +
-            '" stroke="' + sl.c.color + '" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>';
+            '" stroke="' + sl.c.color + '" stroke-width="1" stroke-linejoin="miter" stroke-linecap="butt"/>';
         });
         var pieBox = document.getElementById("pieChart");
         pieBox.innerHTML =
-          '<svg viewBox="0 0 352 210" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
+          '<svg viewBox="0 0 352 200" role="img" aria-label="本月分类支出占比饼图，点按扇区查看详情">' +
           '<g id="pieSides">' + sideSvg + "</g>" +
           '<g id="pieTops">' + topSvg + "</g>" +
           "</svg>" +
@@ -661,8 +660,7 @@
         function renderPie() {
           slices.forEach(function (sl, i) {
             var isSel = i === pieSelected;
-            var isDefault = pieSelected === -1 && i === 0;
-            var dist = isSel ? 12 : (isDefault ? 6 : 0);
+            var dist = isSel ? 12 : 0;
             var v = pieVec(i, dist);
             var tf = "translate(" + v[0].toFixed(1) + "px, " + v[1].toFixed(1) + "px)";
             var dim = pieSelected !== -1 && !isSel;

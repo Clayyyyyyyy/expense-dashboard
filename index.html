@@ -328,6 +328,8 @@
         display: inline-block; margin-top: 2px; font-size: 11px; font-weight: 600;
         padding: 1px 7px; border-radius: 99px; color: var(--ink-2); background: var(--card-soft);
       }
+
+      .tx .who .chip + .chip { margin-left: 4px; }
       .tx .amt { font-size: 15px; font-weight: 700; }
 
       /* merchants */
@@ -559,16 +561,16 @@
       ];
 
       var TOP10 = [
-        { d: "10-06", name: "Dakteobbeuddieuiueonseoul", amt: 1384.57 },
-        { d: "10-19", name: "Zelle To Teresa", amt: 675.00 },
-        { d: "10-06", name: "Gdp=Ai Family", amt: 354.00 },
-        { d: "10-11", name: "Wayfair", amt: 292.26 },
-        { d: "10-09", name: "Gdp=Ai Family", amt: 275.00 },
-        { d: "10-10", name: "Pop Mart", amt: 259.68 },
-        { d: "10-13", name: "Pop Mart", amt: 243.48 },
-        { d: "10-14", name: "Pop Mart", amt: 243.48 },
-        { d: "10-02", name: "Gdp=Ai Family", amt: 220.20 },
-        { d: "10-12", name: "Airbnb", amt: 206.24 }
+        { d: "10-06", name: "Dakteobbeuddieuiueonseoul", amt: 1384.57, cat: "购物" },
+        { d: "10-19", name: "Zelle To Teresa", amt: 675.00, cat: "转账" },
+        { d: "10-06", name: "Gdp=Ai Family", amt: 354.00, cat: "医疗" },
+        { d: "10-11", name: "Wayfair", amt: 292.26, cat: "购物" },
+        { d: "10-09", name: "Gdp=Ai Family", amt: 275.00, cat: "医疗" },
+        { d: "10-10", name: "Pop Mart", amt: 259.68, cat: "购物" },
+        { d: "10-13", name: "Pop Mart", amt: 243.48, cat: "购物" },
+        { d: "10-14", name: "Pop Mart", amt: 243.48, cat: "购物" },
+        { d: "10-02", name: "Gdp=Ai Family", amt: 220.20, cat: "医疗" },
+        { d: "10-12", name: "Airbnb", amt: 206.24, cat: "旅行" }
       ];
 
       var MERCHANTS = [
@@ -755,7 +757,8 @@
       document.getElementById("top10").innerHTML = TOP10.map(function (t, i) {
         return '<div class="tx"><span class="rank num' + (i < 3 ? " r" + (i + 1) : "") + '">' + (i + 1) + '</span>' +
           '<span class="who"><span class="name">' + esc(t.name) + '</span><br>' +
-          '<span class="chip num">' + t.d + '</span></span>' +
+          '<span class="chip num">' + t.d + '</span>' +
+          (t.cat ? '<span class="chip">' + esc(t.cat) + '</span>' : '') + '</span>' +
           '<span class="amt num">$' + fmt(t.amt) + '</span></div>';
       }).join("");
 

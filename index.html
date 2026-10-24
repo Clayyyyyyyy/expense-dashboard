@@ -794,12 +794,13 @@
           '<span class="rate' + (rate < 0 ? " neg" : "") + '">储蓄率 ' + rateTxt + '</span></span></div>';
       }).join("");
 
-      /* transactions: category tag colored the same way as Top10 */
+      /* transactions: category tag colored the same way as Top10;
+         refunds (negative amounts) shown in green via existing .pos */
       document.getElementById("txs").innerHTML = TXS.map(function (t) {
         return '<div class="tx"><span class="date num">' + t.d + '</span>' +
           '<span class="who"><span class="name">' + esc(t.name) + '</span><br>' +
           catTag(t) + '</span>' +
-          '<span class="amt num">$' + fmt(t.amt) + '</span></div>';
+          '<span class="amt num' + (t.amt < 0 ? ' pos' : '') + '">$' + fmt(t.amt) + '</span></div>';
       }).join("");
 
       /* combo chart: income/expense bars + balance line (hand-built SVG) */

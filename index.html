@@ -775,15 +775,23 @@
           '<span class="amt num">$' + fmt(t.amt) + '</span></div>';
       }).join("");
 
-      /* top 5 merchants: name + amount on line 1, category tag + count on line 2 */
+      /* top 5 merchants: name + amount on line 1, category tag + count on line 2,
+         track colored by the merchant's category (falls back to blue if unknown) */
+      function catColor(cat) {
+        if (!cat) return null;
+        for (var k = 0; k < CATS.length; k++) { if (CATS[k].name === cat) return CATS[k].color; }
+        return null;
+      }
       var merchMax = MERCHANTS[0].amt;
       document.getElementById("merchants").innerHTML = MERCHANTS.map(function (m) {
+        var col = catColor(m.cat);
         return '<div class="merch"><div class="merch-top">' +
           '<span class="name">' + esc(m.name) + '</span>' +
           '<span class="amt num">$' + fmt(m.amt) + '</span></div>' +
           '<div class="merch-sub">' + catTag(m) +
           '<span class="cnt num">' + m.cnt + ' 笔</span></div>' +
-          '<div class="track"><i data-w="' + (m.amt / merchMax * 100).toFixed(1) + '"></i></div></div>';
+          '<div class="track"><i data-w="' + (m.amt / merchMax * 100).toFixed(1) + '"' +
+          (col ? ' style="background:' + col + '"' : '') + '></i></div></div>';
       }).join("");
 
       /* monthly rows (balance tab) */

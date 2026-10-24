@@ -527,7 +527,8 @@
 
       <footer>
         数据来自 Google Sheet「个人支出管理」，每日自动同步<br />
-        本页为打开时的快照，金额单位为美元（USD）
+        本页为打开时的快照，金额单位为美元（USD）<br />
+        最后更新：<span id="lastUpdate">2026-10-24</span>
       </footer>
     </main>
 
@@ -613,21 +614,21 @@
       ];
 
       var TXS = [
-        { d: "10-04", name: "Michaels", amt: 7.57, cat: "购物" },
-        { d: "10-04", name: "Pet Supplies Plus", amt: 77.55, cat: "购物" },
-        { d: "10-04", name: "Meituan", amt: 2.54, cat: "餐饮" },
-        { d: "10-04", name: "Meituan", amt: 10.00, cat: "餐饮" },
-        { d: "10-03", name: "Alipay*Shanghaihecheshanghai", amt: 75.43, cat: "购物" },
-        { d: "10-03", name: "Alipay*Shanghaihecheshanghai", amt: 160.94, cat: "购物" },
-        { d: "10-02", name: "Sichuan Pepper House", amt: 41.03, cat: "餐饮" },
-        { d: "10-02", name: "Gdp=Ai Family", amt: 220.20, cat: "医疗" },
-        { d: "10-02", name: "Amazon", amt: 3.93, cat: "购物" },
-        { d: "10-02", name: "Amazon", amt: 21.64, cat: "购物" },
-        { d: "10-02", name: "Amazon", amt: 36.74, cat: "购物" },
-        { d: "10-02", name: "At&T", amt: 57.25, cat: "水电网" },
-        { d: "10-01", name: "Alipay* Shanghai", amt: 18.80, cat: "购物" },
-        { d: "10-01", name: "Uniqlo", amt: 75.67, cat: "购物" },
-        { d: "10-01", name: "Zelle To Salon", amt: 35.00, cat: "转账" }
+        { d: "10-23", name: "Blink Charging", amt: 2.65, cat: "交通" },
+        { d: "10-23", name: "Pop Mart", amt: 88.72, cat: "购物" },
+        { d: "10-22", name: "Blink Charging", amt: 1.60, cat: "交通" },
+        { d: "10-22", name: "Instant Ink", amt: 6.48, cat: "订阅" },
+        { d: "10-22", name: "Good Fortune Restaurant", amt: 55.04, cat: "超市" },
+        { d: "10-21", name: "Good Fortune Supermarket", amt: 55.04, cat: "超市" },
+        { d: "10-20", name: "Blink Charging", amt: 2.31, cat: "交通" },
+        { d: "10-20", name: "Amazon", amt: -46.54, cat: "购物" },
+        { d: "10-20", name: "Amazon", amt: -16.23, cat: "购物" },
+        { d: "10-20", name: "Amazon", amt: -45.18, cat: "购物" },
+        { d: "10-20", name: "Amazon", amt: -86.59, cat: "购物" },
+        { d: "10-20", name: "Amazon", amt: -70.35, cat: "购物" },
+        { d: "10-19", name: "H-E-B", amt: 52.56, cat: "超市" },
+        { d: "10-19", name: "Tesla", amt: 8.16, cat: "交通" },
+        { d: "10-19", name: "Walmart", amt: 10.00, cat: "购物" }
       ];
 
       function fmt(n) {

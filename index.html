@@ -324,12 +324,12 @@
       .tx .who .name {
         font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .tx .who .chip {
+      .chip {
         display: inline-block; margin-top: 2px; font-size: 11px; font-weight: 600;
         padding: 1px 7px; border-radius: 99px; color: var(--ink-2); background: var(--card-soft);
       }
 
-      .tx .who .chip + .chip { margin-left: 4px; }
+      .chip + .chip { margin-left: 4px; }
       .tx .amt { font-size: 15px; font-weight: 700; }
 
       /* merchants */
@@ -338,8 +338,9 @@
       .merch:first-of-type { padding-top: 6px; }
       .merch-top { display: flex; align-items: baseline; gap: 8px; }
       .merch-top .name { font-size: 14px; font-weight: 600; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .merch-top .chip { flex: none; white-space: nowrap; }
-      .merch-top .cnt { font-size: 11px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+      .merch-sub { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+      .merch-sub .chip { flex: none; margin-top: 0; white-space: nowrap; }
+      .merch .cnt { font-size: 11px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
       .merch-top .amt { margin-left: auto; font-size: 15px; font-weight: 700; white-space: nowrap; }
       .merch .track { margin-top: 7px; height: 6px; }
       .merch .track i { background: var(--blue); }
@@ -774,14 +775,14 @@
           '<span class="amt num">$' + fmt(t.amt) + '</span></div>';
       }).join("");
 
-      /* top 5 merchants: category tag colored the same way as Top10 */
+      /* top 5 merchants: name + amount on line 1, category tag + count on line 2 */
       var merchMax = MERCHANTS[0].amt;
       document.getElementById("merchants").innerHTML = MERCHANTS.map(function (m) {
         return '<div class="merch"><div class="merch-top">' +
           '<span class="name">' + esc(m.name) + '</span>' +
-          catTag(m) +
-          '<span class="cnt num">' + m.cnt + ' 笔</span>' +
           '<span class="amt num">$' + fmt(m.amt) + '</span></div>' +
+          '<div class="merch-sub">' + catTag(m) +
+          '<span class="cnt num">' + m.cnt + ' 笔</span></div>' +
           '<div class="track"><i data-w="' + (m.amt / merchMax * 100).toFixed(1) + '"></i></div></div>';
       }).join("");
 

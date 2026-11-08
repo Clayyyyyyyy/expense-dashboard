@@ -382,16 +382,16 @@
         <!-- 本月结余 -->
         <section class="hero" aria-label="本月结余总览">
           <div class="label">本月结余</div>
-          <div class="big num"><span class="cur">$</span>-230.58</div>
+          <div class="big num"><span class="cur">$</span>401.42</div>
           <div class="io">
             <div class="io-row">
               <span class="tag">收入</span>
               <div class="track"><i class="fill-in" data-w="100"></i></div>
-              <span class="amt num">$718.50<small>上月 $65,821.66</small></span>
+              <span class="amt num">$1,350.50<small>上月 $65,821.66</small></span>
             </div>
             <div class="io-row">
               <span class="tag">支出</span>
-              <div class="track"><i class="fill-out" data-w="132.1"></i></div>
+              <div class="track"><i class="fill-out" data-w="70.3"></i></div>
               <span class="amt num">$949.08<small>上月 $7,224.65</small></span>
             </div>
           </div>
@@ -406,7 +406,7 @@
           </div>
           <div class="stat">
             <div class="k">本月日均支出</div>
-            <div class="v num">$135.58</div>
+            <div class="v num">$118.64</div>
             <div class="d">按本月已过天数计</div>
           </div>
           <div class="stat">
@@ -426,8 +426,8 @@
           </div>
           <div class="stat">
             <div class="k">12 个月储蓄率</div>
-            <div class="v num">57.1%</div>
-            <div class="d">累计结余 <span class="num">$74,646.51</span></div>
+            <div class="v num">57.3%</div>
+            <div class="d">累计结余 <span class="num">$75,278.51</span></div>
           </div>
         </section>
 
@@ -442,7 +442,7 @@
         <h2 class="group-title">智能分析</h2>
         <section class="card insight-card c-blue" aria-label="本月总结">
           <h3><span class="ic">📝</span>本月总结</h3>
-          <p>11 月截至 07 日共支出 <b class="num">$949.08</b>（20 笔），日均 <b class="num">$135.58</b>；最大单笔 <b class="num">$280.10</b>（At&T · 11-03）。</p>
+          <p>11 月截至 08 日共支出 <b class="num">$949.08</b>（20 笔），日均 <b class="num">$118.64</b>；最大单笔 <b class="num">$280.10</b>（At&T · 11-03）。</p>
           <p>支出最高分类 <b>水电网 <span class="num">$326.55</span></b>（占 34.4%）；增长最快 <b>水电网</b>，较上月增加 <b class="num">$23.80</b>（+7.9%）。</p>
         </section>
         <section class="card insight-card c-red" aria-label="异常消费">
@@ -515,9 +515,9 @@
           <div class="mrow head"><span>月份</span><span>收入</span><span>支出</span><span>结余 · 储蓄率</span></div>
           <div class="mrow total-top">
             <span>12 个月合计</span>
-            <span class="num">$130,799.96</span>
+            <span class="num">$131,431.96</span>
             <span class="num">$56,153.45</span>
-            <span class="bal num pos">+$74,646.51<span class="rate">储蓄率 57.1%</span></span>
+            <span class="bal num pos">+$75,278.51<span class="rate">储蓄率 57.3%</span></span>
           </div>
           <div id="months"></div>
         </section>
@@ -528,7 +528,7 @@
       <footer>
         数据来自 Google Sheet「个人支出管理」，每日自动同步<br />
         本页为打开时的快照，金额单位为美元（USD）<br />
-        最后更新：<span id="lastUpdate">2026-11-07</span>
+        最后更新：<span id="lastUpdate">2026-11-08</span>
       </footer>
     </main>
 
@@ -559,7 +559,7 @@
         { m: "8月", inc: 8701.55, exp: 2285.10, bal: 6416.45 },
         { m: "9月", inc: 8362.80, exp: 10288.40, bal: -1925.60 },
         { m: "10月", inc: 65821.66, exp: 7224.65, bal: 58597.01 },
-        { m: "11月", inc: 718.50, exp: 949.08, bal: -230.58, cur: true }
+        { m: "11月", inc: 1350.50, exp: 949.08, bal: 401.42, cur: true }
       ];
 
       var TOP10 = [
@@ -853,7 +853,7 @@
                (MONTHS[i].bal < 0 ? cRed : cBlue) + '" stroke="' + (dark ? "#292623" : "#ffffff") + '" stroke-width="1.4"/>';
         });
         var oct = pts[n - 1];
-        s += '<text x="' + (oct[0] - 2) + '" y="' + (Y(718.50) - 5) + '" font-size="9.5" font-weight="700" text-anchor="end" fill="' + cGreen + '">$718</text>';
+        s += '<text x="' + (oct[0] - 2) + '" y="' + (Y(1350.50) - 5) + '" font-size="9.5" font-weight="700" text-anchor="end" fill="' + cGreen + '">$1,350</text>';
         document.getElementById("chart").innerHTML =
           '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="每月收入、支出柱状图与结余折线图">' + s + "</svg>";
       })();

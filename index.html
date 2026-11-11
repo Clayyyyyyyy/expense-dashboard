@@ -382,16 +382,16 @@
         <!-- 本月结余 -->
         <section class="hero" aria-label="本月结余总览">
           <div class="label">本月结余</div>
-          <div class="big num"><span class="cur">$</span>-628.65</div>
+          <div class="big num"><span class="cur">$</span>-715.15</div>
           <div class="io">
             <div class="io-row">
               <span class="tag">收入</span>
               <div class="track"><i class="fill-in" data-w="100"></i></div>
-              <span class="amt num">$829.00<small>上月 $65,821.66</small></span>
+              <span class="amt num">$742.50<small>上月 $65,821.66</small></span>
             </div>
             <div class="io-row">
               <span class="tag">支出</span>
-              <div class="track"><i class="fill-out" data-w="175.8"></i></div>
+              <div class="track"><i class="fill-out" data-w="196.3"></i></div>
               <span class="amt num">$1,457.65<small>上月 $7,224.65</small></span>
             </div>
           </div>
@@ -427,7 +427,7 @@
           <div class="stat">
             <div class="k">12 个月储蓄率</div>
             <div class="v num">56.7%</div>
-            <div class="d">累计结余 <span class="num">$74,248.44</span></div>
+            <div class="d">累计结余 <span class="num">$74,161.94</span></div>
           </div>
         </section>
 
@@ -516,9 +516,9 @@
           <div class="mrow head"><span>月份</span><span>收入</span><span>支出</span><span>结余 · 储蓄率</span></div>
           <div class="mrow total-top">
             <span>12 个月合计</span>
-            <span class="num">$130,910.46</span>
+            <span class="num">$130,823.96</span>
             <span class="num">$56,662.02</span>
-            <span class="bal num pos">+$74,248.44<span class="rate">储蓄率 56.7%</span></span>
+            <span class="bal num pos">+$74,161.94<span class="rate">储蓄率 56.7%</span></span>
           </div>
           <div id="months"></div>
         </section>
@@ -560,7 +560,7 @@
         { m: "8月", inc: 8701.55, exp: 2285.10, bal: 6416.45 },
         { m: "9月", inc: 8362.80, exp: 10288.40, bal: -1925.60 },
         { m: "10月", inc: 65821.66, exp: 7224.65, bal: 58597.01 },
-        { m: "11月", inc: 829.00, exp: 1457.65, bal: -628.65, cur: true }
+        { m: "11月", inc: 742.50, exp: 1457.65, bal: -715.15, cur: true }
       ];
 
       var TOP10 = [
@@ -854,7 +854,7 @@
                (MONTHS[i].bal < 0 ? cRed : cBlue) + '" stroke="' + (dark ? "#292623" : "#ffffff") + '" stroke-width="1.4"/>';
         });
         var oct = pts[n - 1];
-        s += '<text x="' + (oct[0] - 2) + '" y="' + (Y(829.00) - 5) + '" font-size="9.5" font-weight="700" text-anchor="end" fill="' + cGreen + '">$829</text>';
+        s += '<text x="' + (oct[0] - 2) + '" y="' + (Y(742.50) - 5) + '" font-size="9.5" font-weight="700" text-anchor="end" fill="' + cGreen + '">$742</text>';
         document.getElementById("chart").innerHTML =
           '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="每月收入、支出柱状图与结余折线图">' + s + "</svg>";
       })();
